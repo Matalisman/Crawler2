@@ -102,4 +102,12 @@ public class WebReader implements  Runnable {
     public void run() {
         this.read();
     }
+
+    public ObiektCrawlera getObiekt() {
+        return obiekt;
+    }
+
+    public void setObiekt(ObiektCrawlera obiekt) {
+        this.obiekt = obiekt;
+    } 
 }

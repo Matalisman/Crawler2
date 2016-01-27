@@ -111,22 +111,14 @@ public class Parser extends javax.swing.JFrame {
             
             Thread thread = new Thread(new WebReader(new ObiektCrawlera(fileReader.nextLine()),slowoKluczowe, linkCounter ));
             Thread wczytaj = new Thread(new LinkManager(slowoKluczowe,linkCounter ));
-            wczytaj.run();
+            //wczytaj.run();
             thread.run();
-            
-            
-            
+                        
             }
-            
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
-        
         
     }//GEN-LAST:event_acceptActionPerformed
 

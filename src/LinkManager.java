@@ -24,7 +24,7 @@ public class LinkManager implements Runnable {
     ArrayList<ObiektCrawlera> obiektyCrawlera = new ArrayList();
     String slowoKluczowe;
     AtomicInteger linkCounter;
-    Thread[] watki = new Thread[20];
+    Thread[] tablicaWatkow = new Thread[20];
     WebReader[] linkiWatki = new WebReader[20];
     
     public LinkManager(String slowoKluczowe, AtomicInteger linkCounter) {
@@ -40,7 +40,6 @@ public class LinkManager implements Runnable {
             content = new ObjectInputStream(new FileInputStream("wyniki.dat"));
         } catch(FileNotFoundException e){
         } catch (IOException ex) {
-            
         }
         try{
         obiektyCrawlera = (ArrayList<ObiektCrawlera>) content.readObject();
@@ -48,26 +47,41 @@ public class LinkManager implements Runnable {
         } catch (ClassNotFoundException | IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(obiektyCrawlera);
         return obiektyCrawlera;
     }
         
     public void stworzWatki(){
+        while(true)
+        {
+        while(linkCounter.get()<500) {
+            
         obiektyCrawlera = this.pobierzObiekty();
-        for (int i=0; i<20;){
-            if(!obiektyCrawlera.get(i).isChecked())
-            {
-                linkiWatki[1] = new WebReader(obiektyCrawlera.get(i),slowoKluczowe, linkCounter);
-                 watki[i] = new Thread(linkiWatki[i]);
-                 watki[i].run();
-                 i++;
+        
+        for (int i=0; i<obiektyCrawlera.size(); i++){
+            if(!obiektyCrawlera.get(i).isChecked()){
+                for(int j=0; j<tablicaWatkow.length; j++){
+                    try {
+                        
+                        if(!tablicaWatkow[j].isAlive()){
+                            linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
+                            break;                        
+                        }
+                    } catch(NullPointerException e){
+                    linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
+                    tablicaWatkow[j] = new Thread(linkiWatki[j]);
+                    }
+                
+                }    
+                }
             }
         }
-    }
-
-    @Override
-    public void run() {
-        this.pobierzObiekty();
+        }
     }
     
+    @Override
+    public void run() {
+        this.stworzWatki();
+    }
 }
+    
+
