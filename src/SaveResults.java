@@ -69,16 +69,12 @@ public class SaveResults {
             System.out.println("SaveResults przed");
             System.out.println(atomicInteger);
             atomicInteger.addAndGet(-(obiekty.size()));
-            System.out.println("SaveResults po" + obiektyCrawlera.size());
+            System.out.println("SaveResults po " + obiektyCrawlera.size());
             System.out.println(atomicInteger);
         } catch (IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }
-        } 
-
-        
-        // Close the file
-        
-    }
+    }         
+}
 
 

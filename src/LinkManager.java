@@ -24,8 +24,8 @@ public class LinkManager implements Runnable {
     ArrayList<ObiektCrawlera> obiektyCrawlera = new ArrayList();
     String slowoKluczowe;
     AtomicInteger linkCounter;
-    Thread[] tablicaWatkow = new Thread[20];
-    WebReader[] linkiWatki = new WebReader[20];
+    Thread[] tablicaWatkow = new Thread[5];
+    WebReader[] linkiWatki = new WebReader[5];
     
     public LinkManager(String slowoKluczowe, AtomicInteger linkCounter) {
         this.slowoKluczowe = slowoKluczowe;
@@ -57,26 +57,30 @@ public class LinkManager implements Runnable {
             obiektyCrawlera = this.pobierzObiekty();
 
                 for (int i=0; i<obiektyCrawlera.size(); i++){
-                    if(!obiektyCrawlera.get(i).isChecked()){
-                        for(int j=0; j<tablicaWatkow.length; j++){
-                            try {
+                        if(!obiektyCrawlera.get(i).isChecked()){
+                            for(int j=0; j<tablicaWatkow.length; j++){
+                                try {
 
-                                if(!tablicaWatkow[j].isAlive()){
-                                    linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
-                                    tablicaWatkow[j].run();
-                                    break;                        
+                                    if(!tablicaWatkow[j].isAlive()){
+                                        linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
+                                         System.out.println(" Watek nr wchodzi: " + j);
+                                        tablicaWatkow[j].run();
+                                        
+                                                             
+                                    }
+                                } catch(NullPointerException e){
+
+                                linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
+                                tablicaWatkow[j] = new Thread(linkiWatki[j]);
+                                System.out.println("Utworzono Watek nr: " + j);
+                                tablicaWatkow[j].run();
                                 }
-                            } catch(NullPointerException e){
-                            linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
-                            tablicaWatkow[j] = new Thread(linkiWatki[j]);
-                            tablicaWatkow[j].run();
-                            break;
-                            }
-
-                        }    
-                    }
+                            }    
+                        }
                 }
+                 System.out.println("A linkManager sobie w watku dziala ");
             }
+           
         }
     }
     

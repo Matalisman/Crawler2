@@ -28,16 +28,10 @@ public class WebReader implements  Runnable {
 
     WebReader(ObiektCrawlera obiekt, String slowoKluczowe, AtomicInteger atomicInteger) {
         this.obiekt = obiekt;
+        this.obiekt.setChecked(true);
         this.slowoKluczowe = slowoKluczowe;
         this.atomicInteger = atomicInteger;
     }
-    
-    
-
-    /**
-     *
-     * @return
-     */
     
     public ArrayList<ObiektCrawlera> read() {
        String content = null;
@@ -88,17 +82,13 @@ public class WebReader implements  Runnable {
             url = new URL(obiekt.getNazwa());
             }
             scanner = new Scanner(url.openStream());
+            while(scanner.hasNext()) {    
+                content += scanner.nextLine();
             }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Can not read URL");
             e.printStackTrace();
         }
-            
-        
-        while(scanner.hasNext()) {    
-            content += scanner.nextLine();
-        }
-        
         return content;    
     }
 
