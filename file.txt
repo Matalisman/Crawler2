@@ -1,3 +1,5 @@
 http://www.wp.pl
 www.interia.pl
 http://www.onet.pl
+http://www.wikipedia.pl
+http://www.bcc.org.pl/

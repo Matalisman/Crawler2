@@ -25,14 +25,18 @@ public class WebReader implements  Runnable {
     private ObiektCrawlera obiekt;
     private String slowoKluczowe;
     private AtomicInteger atomicInteger;
+    private AtomicInteger wordCounter;
+    private AtomicInteger wBazie;
      SaveResults saveResults;
 
-    WebReader(ObiektCrawlera obiekt, String slowoKluczowe, AtomicInteger atomicInteger, SaveResults saveResults) {
+    WebReader(ObiektCrawlera obiekt, String slowoKluczowe, AtomicInteger atomicInteger,AtomicInteger wordCounter,AtomicInteger wBazie, SaveResults saveResults) {
         this.obiekt = obiekt;
         this.obiekt.setChecked(true);
         this.slowoKluczowe = slowoKluczowe;
         this.atomicInteger = atomicInteger;
         this.saveResults = saveResults;
+        this.wordCounter = wordCounter;
+        this.wBazie = wBazie;
     }
     
     public ArrayList<ObiektCrawlera> read() {
@@ -56,7 +60,11 @@ public class WebReader implements  Runnable {
             
                 if (linki[i].matches(regex) && !linki[i].matches(obiekt.getNazwa())) { // matches uses regex
                 //System.out.println("Match " + linki[i]);
+                wBazie.incrementAndGet();    
                 wynikLinkow.add(new ObiektCrawlera(linki[i]));
+                }
+                if(linki[i].matches(regexKeyWord)) {
+                    wordCounter.incrementAndGet();
                 }
             
             }}  catch(NullPointerException e){}

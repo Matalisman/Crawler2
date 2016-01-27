@@ -24,21 +24,25 @@ public class LinkManager implements Runnable {
     ArrayList<ObiektCrawlera> obiektyCrawlera = new ArrayList();
     String slowoKluczowe;
     AtomicInteger linkCounter;
+    AtomicInteger wordCounter;
+     AtomicInteger dataBaseCounter;
     SaveResults saveResults = new SaveResults();
     Thread[] tablicaWatkow = new Thread[10];
     WebReader[] linkiWatki = new WebReader[10];
     
-    public LinkManager(String slowoKluczowe, AtomicInteger linkCounter, SaveResults saveResults) {
+    public LinkManager(String slowoKluczowe, AtomicInteger linkCounter,AtomicInteger wordCounter,AtomicInteger databaseCounter, SaveResults saveResults) {
         this.slowoKluczowe = slowoKluczowe;
         this.linkCounter = linkCounter;
         this.saveResults=saveResults;
+        this.wordCounter= wordCounter;
+        this.dataBaseCounter = databaseCounter;
     }
     
     public ArrayList<ObiektCrawlera> pobierzObiekty(){
         try {
             saveResults.saveToFile(null, linkCounter);
         } catch (FileNotFoundException ex) {
-            System.out.println("nie znalazł mi");
+            System.out.println("Brak pliku");
         }
         return saveResults.getList();
     }
@@ -63,7 +67,7 @@ public class LinkManager implements Runnable {
                                     }
                                 } catch(NullPointerException e){
 
-                                linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter, saveResults);    
+                                linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter, wordCounter, dataBaseCounter, saveResults);    
                                 tablicaWatkow[j] = new Thread(linkiWatki[j]);
                                 System.out.println("Utworzono Watek nr: " + j);
                                 System.out.println(obiektyCrawlera.get(i).getNazwa());

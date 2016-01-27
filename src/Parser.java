@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,9 @@ import java.util.logging.Logger;
  */
 public class Parser extends javax.swing.JFrame {
     ArrayList<String[]> historia= new ArrayList();
-    private AtomicInteger linkCounter = new AtomicInteger(0);
+    private AtomicInteger linkCounter = new AtomicInteger();
+      private AtomicInteger databaseCounter = new AtomicInteger();
+    private AtomicInteger wordCounter = new AtomicInteger();
     String[] outputArray;
     int outputArrayCounter;
     String outPutText;
@@ -109,17 +112,22 @@ public class Parser extends javax.swing.JFrame {
             
             Scanner fileReader = new Scanner(new File("file.txt"));
             while(fileReader.hasNextLine()){
-            Thread thread = new Thread(new WebReader(new ObiektCrawlera(fileReader.nextLine()),slowoKluczowe, linkCounter, saveResults ));
+            Thread thread = new Thread(new WebReader(new ObiektCrawlera(fileReader.nextLine()),slowoKluczowe, linkCounter,wordCounter,databaseCounter, saveResults ));
             thread.start();          
             }
-            System.out.println("A czemu po while nigdy nic mi tu nie wchodzi? :< ");
-            Thread wczytaj = new Thread(new LinkManager(slowoKluczowe,linkCounter, saveResults));
+            Thread wczytaj = new Thread(new LinkManager(slowoKluczowe,linkCounter,wordCounter,databaseCounter, saveResults));
             wczytaj.start();
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        Timer timer1;
+        timer1 = new Timer();
+        
+        Statystyki statystyki = new Statystyki(linkCounter, wordCounter,databaseCounter, output);
+        Statystyki timer1_task = statystyki;
+        timer1.schedule(timer1_task, 5000,5000);
     }//GEN-LAST:event_acceptActionPerformed
 
     private void historyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyActionPerformed
