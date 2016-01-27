@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class SaveResults {
     private ArrayList<ObiektCrawlera> wyniki;
     private static SaveResults instance = null;
+    ArrayList<ObiektCrawlera> obiektyCrawlera = new ArrayList();
     protected SaveResults() {
       // Exists only to defeat instantiation.
     }
@@ -39,7 +40,6 @@ public class SaveResults {
     synchronized public void saveToFile(ArrayList<ObiektCrawlera> obiekty, AtomicInteger atomicInteger) throws FileNotFoundException
     {
             
-        ArrayList<ObiektCrawlera> obiektyCrawlera = new ArrayList();
         ObjectInputStream content=null ;
         ObjectOutputStream save = null;
         try{
@@ -68,14 +68,19 @@ public class SaveResults {
             save.writeObject(obiektyCrawlera);
             System.out.println("SaveResults przed");
             System.out.println(atomicInteger);
-            //atomicInteger.addAndGet(-(obiekty.size()));
+            try{
+            atomicInteger.addAndGet(-(obiekty.size()));
+            } catch(NullPointerException e){}
             System.out.println("SaveResults po " + obiektyCrawlera.size());
          
             System.out.println(atomicInteger);
         } catch (IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }         
+    }
+    ArrayList<ObiektCrawlera> getList(){
+        return obiektyCrawlera;
+    }
 }
 
 

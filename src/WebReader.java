@@ -25,12 +25,14 @@ public class WebReader implements  Runnable {
     private ObiektCrawlera obiekt;
     private String slowoKluczowe;
     private AtomicInteger atomicInteger;
+     SaveResults saveResults;
 
-    WebReader(ObiektCrawlera obiekt, String slowoKluczowe, AtomicInteger atomicInteger) {
+    WebReader(ObiektCrawlera obiekt, String slowoKluczowe, AtomicInteger atomicInteger, SaveResults saveResults) {
         this.obiekt = obiekt;
         this.obiekt.setChecked(true);
         this.slowoKluczowe = slowoKluczowe;
         this.atomicInteger = atomicInteger;
+        this.saveResults = saveResults;
     }
     
     public ArrayList<ObiektCrawlera> read() {
@@ -59,12 +61,11 @@ public class WebReader implements  Runnable {
             
             }}  catch(NullPointerException e){}
         
-        SaveResults zapisz = new SaveResults();
         try {
             atomicInteger.addAndGet(wynikLinkow.size());
         System.out.println("WebReader");
         System.out.println(atomicInteger);
-            zapisz.saveToFile(wynikLinkow,atomicInteger );
+            saveResults.saveToFile(wynikLinkow,atomicInteger );
         } catch (FileNotFoundException ex) {
             Logger.getLogger(WebReader.class.getName()).log(Level.SEVERE, null, ex);
         }

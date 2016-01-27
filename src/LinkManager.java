@@ -24,30 +24,23 @@ public class LinkManager implements Runnable {
     ArrayList<ObiektCrawlera> obiektyCrawlera = new ArrayList();
     String slowoKluczowe;
     AtomicInteger linkCounter;
-    Thread[] tablicaWatkow = new Thread[5];
-    WebReader[] linkiWatki = new WebReader[5];
+    SaveResults saveResults = new SaveResults();
+    Thread[] tablicaWatkow = new Thread[10];
+    WebReader[] linkiWatki = new WebReader[10];
     
-    public LinkManager(String slowoKluczowe, AtomicInteger linkCounter) {
+    public LinkManager(String slowoKluczowe, AtomicInteger linkCounter, SaveResults saveResults) {
         this.slowoKluczowe = slowoKluczowe;
         this.linkCounter = linkCounter;
+        this.saveResults=saveResults;
     }
     
     public ArrayList<ObiektCrawlera> pobierzObiekty(){
-            
-        
-        ObjectInputStream content=null ;
-        try{
-            content = new ObjectInputStream(new FileInputStream("wyniki.dat"));
-        } catch(FileNotFoundException e){
-        } catch (IOException ex) {
+        try {
+            saveResults.saveToFile(null, linkCounter);
+        } catch (FileNotFoundException ex) {
+            System.out.println("nie znalazł mi");
         }
-        try{
-        obiektyCrawlera = (ArrayList<ObiektCrawlera>) content.readObject();
-        }catch (NullPointerException e){
-        } catch (ClassNotFoundException | IOException ex) {
-            Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return obiektyCrawlera;
+        return saveResults.getList();
     }
         
     public void stworzWatki(){
@@ -56,7 +49,7 @@ public class LinkManager implements Runnable {
 
             obiektyCrawlera = this.pobierzObiekty();
 
-                for (int i=0; i<obiektyCrawlera.size(); ){
+                for (int i=0; i<obiektyCrawlera.size(); i++){
                         if(!obiektyCrawlera.get(i).isChecked()){
                             for(int j=0; j<tablicaWatkow.length; j++){
                                 try {
@@ -64,16 +57,18 @@ public class LinkManager implements Runnable {
                                     if(!tablicaWatkow[j].isAlive()){
                                         linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
                                          System.out.println(" Watek nr wchodzi: " + j);
-                                         i++;
-                                        tablicaWatkow[j].run();             
+                                         System.out.println(obiektyCrawlera.get(i).getNazwa());
+                                        tablicaWatkow[j].run();
+                                        break;
                                     }
                                 } catch(NullPointerException e){
 
-                                linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
+                                linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter, saveResults);    
                                 tablicaWatkow[j] = new Thread(linkiWatki[j]);
                                 System.out.println("Utworzono Watek nr: " + j);
-                                i++;
-                                tablicaWatkow[j].run();
+                                System.out.println(obiektyCrawlera.get(i).getNazwa());
+                                tablicaWatkow[j].start();
+                                break;
                                 }
                             }    
                         }
