@@ -111,8 +111,9 @@ public class Parser extends javax.swing.JFrame {
             
             Thread thread = new Thread(new WebReader(new ObiektCrawlera(fileReader.nextLine()),slowoKluczowe, linkCounter ));
             Thread wczytaj = new Thread(new LinkManager(slowoKluczowe,linkCounter ));
-            //wczytaj.run();
+            
             thread.run();
+            wczytaj.run();
                         
             }
             

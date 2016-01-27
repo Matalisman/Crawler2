@@ -53,7 +53,7 @@ public class WebReader implements  Runnable {
             String regexKeyWord = slowoKluczowe ;
         try {
             
-            linki = content.split("=\"|\\s+|>|\"|'");
+            linki = content.split("=\"|\\s+|>|\"|'|<");
             
                        
             for (int i=0; i<linki.length; i++) {
@@ -81,19 +81,23 @@ public class WebReader implements  Runnable {
         String content = null;
         Scanner scanner = null;
         try {
-            URL url = new URL(obiekt.getNazwa());
+            URL url;
+            if (obiekt.getNazwa().startsWith("www")){
+                url = new URL("http://" + obiekt.getNazwa());
+            } else {
+            url = new URL(obiekt.getNazwa());
+            }
             scanner = new Scanner(url.openStream());
             }
         catch (Exception e) {
             System.out.println("Can not read URL");
             e.printStackTrace();
-            }
+        }
             
         
-        while(scanner.hasNext())
-            {    
+        while(scanner.hasNext()) {    
             content += scanner.nextLine();
-            }
+        }
         
         return content;    
     }

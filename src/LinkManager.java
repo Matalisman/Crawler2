@@ -51,30 +51,32 @@ public class LinkManager implements Runnable {
     }
         
     public void stworzWatki(){
-        while(true)
-        {
-        while(linkCounter.get()<500) {
-            
-        obiektyCrawlera = this.pobierzObiekty();
-        
-        for (int i=0; i<obiektyCrawlera.size(); i++){
-            if(!obiektyCrawlera.get(i).isChecked()){
-                for(int j=0; j<tablicaWatkow.length; j++){
-                    try {
-                        
-                        if(!tablicaWatkow[j].isAlive()){
-                            linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
-                            break;                        
-                        }
-                    } catch(NullPointerException e){
-                    linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
-                    tablicaWatkow[j] = new Thread(linkiWatki[j]);
+        while(true) {
+            while(linkCounter.get()<500) {
+
+            obiektyCrawlera = this.pobierzObiekty();
+
+                for (int i=0; i<obiektyCrawlera.size(); i++){
+                    if(!obiektyCrawlera.get(i).isChecked()){
+                        for(int j=0; j<tablicaWatkow.length; j++){
+                            try {
+
+                                if(!tablicaWatkow[j].isAlive()){
+                                    linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
+                                    tablicaWatkow[j].run();
+                                    break;                        
+                                }
+                            } catch(NullPointerException e){
+                            linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
+                            tablicaWatkow[j] = new Thread(linkiWatki[j]);
+                            tablicaWatkow[j].run();
+                            break;
+                            }
+
+                        }    
                     }
-                
-                }    
                 }
             }
-        }
         }
     }
     
