@@ -52,7 +52,7 @@ public class WebReader implements  Runnable {
                        
             for (int i=0; i<linki.length; i++) {
             
-                if (linki[i].matches(regex)) { // matches uses regex
+                if (linki[i].matches(regex) && !linki[i].matches(obiekt.getNazwa())) { // matches uses regex
                 //System.out.println("Match " + linki[i]);
                 wynikLinkow.add(new ObiektCrawlera(linki[i]));
                 }

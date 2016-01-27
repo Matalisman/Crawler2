@@ -56,7 +56,7 @@ public class LinkManager implements Runnable {
 
             obiektyCrawlera = this.pobierzObiekty();
 
-                for (int i=0; i<obiektyCrawlera.size(); i++){
+                for (int i=0; i<obiektyCrawlera.size(); ){
                         if(!obiektyCrawlera.get(i).isChecked()){
                             for(int j=0; j<tablicaWatkow.length; j++){
                                 try {
@@ -64,15 +64,15 @@ public class LinkManager implements Runnable {
                                     if(!tablicaWatkow[j].isAlive()){
                                         linkiWatki[j].setObiekt(obiektyCrawlera.get(i));
                                          System.out.println(" Watek nr wchodzi: " + j);
-                                        tablicaWatkow[j].run();
-                                        
-                                                             
+                                         i++;
+                                        tablicaWatkow[j].run();             
                                     }
                                 } catch(NullPointerException e){
 
                                 linkiWatki[j]= new WebReader(obiektyCrawlera.get(i), slowoKluczowe, linkCounter);    
                                 tablicaWatkow[j] = new Thread(linkiWatki[j]);
                                 System.out.println("Utworzono Watek nr: " + j);
+                                i++;
                                 tablicaWatkow[j].run();
                                 }
                             }    

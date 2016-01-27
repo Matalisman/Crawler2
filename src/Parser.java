@@ -108,14 +108,12 @@ public class Parser extends javax.swing.JFrame {
             
             Scanner fileReader = new Scanner(new File("file.txt"));
             while(fileReader.hasNextLine()){
-            
             Thread thread = new Thread(new WebReader(new ObiektCrawlera(fileReader.nextLine()),slowoKluczowe, linkCounter ));
-            Thread wczytaj = new Thread(new LinkManager(slowoKluczowe,linkCounter ));
-            
-            thread.run();
-            wczytaj.run();
-                        
+            thread.start();          
             }
+            System.out.println("A czemu po while nigdy nic mi tu nie wchodzi? :< ");
+//            Thread wczytaj = new Thread(new LinkManager(slowoKluczowe,linkCounter ));
+//            wczytaj.start();
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
